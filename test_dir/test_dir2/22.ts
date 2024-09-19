@@ -1,0 +1,6 @@
+console.trace('DATA::>>')
+console.log('DATA::>>')
+console.table('DATA::>>')
+console.debug('DATA::>>')
+console.trace('DATA::>>')
+console.trace('DATA::>>')
