@@ -5,13 +5,14 @@ from letter_map import letter_map
 def save_container(container_path, message):
     binary_data = message.encode('cp1251')
     secret_bits = reduce(lambda acc, bit_item: acc + bin(bit_item)[2:].rjust(8, '0'), binary_data, '')
+    secret_bits = secret_bits + '00000000'
     print(secret_bits)
 
     with open(container_path, "r", encoding="utf-8") as f:
         container_content = f.read()
 
     bit_index = 0
-    container_list = list(container_content)  # Преобразуем в список для удобства замены
+    container_list = list(container_content)
 
     # Проход по тексту контейнера
     for i, char in enumerate(container_list):

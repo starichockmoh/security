@@ -1,21 +1,21 @@
-# Модуль 2: Извлечение информации
+from letter_map import letter_map
+
+
 def bits_to_text(bits):
     """Преобразование битовой строки обратно в текст."""
-    chars = [chr(int(bits[i:i + 8], 2)) for i in range(0, len(bits), 8)]
-    return ''.join(chars)
+    # Разбиваем биты на байты по 8 бит
+    byte_array = bytearray(int(bits[i:i + 8], 2) for i in range(0, len(bits), 8))
+    # Декодируем байты в текст с кодировкой cp1251
+    return byte_array.decode('cp1251', errors='ignore')
 
 
 def extract_data(container_with_secret_file):
-    # Массивы соответствия русских и английских букв
-    rus_to_eng = {'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c', 'у': 'y', 'х': 'x',
-                  'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K', 'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T', 'Х': 'X'}
+    rus_to_eng = letter_map
     eng_to_rus = {v: k for k, v in rus_to_eng.items()}
 
-    # Чтение контейнера с секретом
     with open(container_with_secret_file, 'r', encoding='utf-8') as container:
         container_text = container.read()
 
-    # Извлечение битов из контейнера
     secret_bits = []
     for char in container_text:
         if char in rus_to_eng:  # Если это русская буква
@@ -23,14 +23,21 @@ def extract_data(container_with_secret_file):
         elif char in eng_to_rus:  # Если это англ. аналог
             secret_bits.append('1')
 
-    # Преобразуем биты в текст
+        # Проверка на конец скрытого сообщения
+        if len(secret_bits) >= 8 and ''.join(secret_bits[-8:]) == '00000000':
+            # Удаляем маркер окончания
+            secret_bits = secret_bits[:-8]
+            break
+
     print(''.join(secret_bits))
     secret_text = bits_to_text(''.join(secret_bits))
+
+    with open('message.txt', 'w', encoding='utf-8') as message_file:
+        message_file.write(secret_text)
 
     return secret_text
 
 
-# Пример использования
 container_with_secret_file = './container.txt'
 secret_message = extract_data(container_with_secret_file)
 print(f"Скрытое сообщение: {secret_message}")
