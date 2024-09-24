@@ -1,34 +1,36 @@
-from letter_map import letter_map
+# Модуль 2: Извлечение информации
+def bits_to_text(bits):
+    """Преобразование битовой строки обратно в текст."""
+    chars = [chr(int(bits[i:i + 8], 2)) for i in range(0, len(bits), 8)]
+    return ''.join(chars)
 
 
-def extract_message(container_path):
-    reverse_letter_map = {v: k for k, v in letter_map.items()}
-    END = "0010000000101110"
-    # Читаем содержимое файла
-    with open(container_path, "r", encoding="utf-8") as f:
-        content = f.read()
-    bin_message = ""
-    for char in content:
-        if char in letter_map:
-            bin_message += '0'
-        if char in reverse_letter_map:
-            bin_message += '1'
-        if len(bin_message) > 16:
-            if bin_message[-16:] == END:
-                break
-    bits = bin_message[:-16]
-    byte_array = bytearray()
-    for i in range(0, len(bits), 8):
-        byte = bits[i:i + 8]
-        byte_array.append(int(byte, 2))
+def extract_data(container_with_secret_file):
+    # Массивы соответствия русских и английских букв
+    rus_to_eng = {'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c', 'у': 'y', 'х': 'x',
+                  'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K', 'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T', 'Х': 'X'}
+    eng_to_rus = {v: k for k, v in rus_to_eng.items()}
 
-    return byte_array.decode('cp1251')
+    # Чтение контейнера с секретом
+    with open(container_with_secret_file, 'r', encoding='utf-8') as container:
+        container_text = container.read()
+
+    # Извлечение битов из контейнера
+    secret_bits = []
+    for char in container_text:
+        if char in rus_to_eng:  # Если это русская буква
+            secret_bits.append('0')
+        elif char in eng_to_rus:  # Если это англ. аналог
+            secret_bits.append('1')
+
+    # Преобразуем биты в текст
+    print(''.join(secret_bits))
+    secret_text = bits_to_text(''.join(secret_bits))
+
+    return secret_text
 
 
 # Пример использования
-container_path = "./container.txt"
-extracted_message = extract_message(container_path)
-print(f"Извлеченное сообщение: {extracted_message}")
-
-with open("extracted_message.txt", "w", encoding="utf-8") as f:
-    f.write(extracted_message)
+container_with_secret_file = './container.txt'
+secret_message = extract_data(container_with_secret_file)
+print(f"Скрытое сообщение: {secret_message}")
