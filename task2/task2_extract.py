@@ -1,9 +1,7 @@
+from letter_map import letter_map
+
+
 def extract_message(container_path):
-    # Создаем словарь для обратной замены букв
-    letter_map = {
-        'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c', 'у': 'y', 'х': 'x', 'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K',
-        'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T', 'Х': 'X'
-    }
     reverse_letter_map = {v: k for k, v in letter_map.items()}
     END = "0010000000101110"
     # Читаем содержимое файла

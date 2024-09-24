@@ -1,6 +1,7 @@
 from functools import reduce
 from letter_map import letter_map
 
+
 def save_container(container_path, message):
     with open(container_path, "r", encoding="utf-8") as f:
         container_content = f.read()
@@ -15,7 +16,7 @@ def save_container(container_path, message):
     for bit in bits:
         while container_content[i] not in letter_map:
             i += 1
-        if int(bit) == 1:
+        if bit == '1':
             container_content = container_content[:i] + letter_map[container_content[i]] + container_content[i + 1:]
         i += 1
     with open(container_path, "w", encoding="utf-8") as f:
