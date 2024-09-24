@@ -1,7 +1,0 @@
-test.txt:20224
-text0.txt:12546
-test_dir1\aa.txt:30577
-test_dir1\text1.txt:22035
-test_dir2\22.ts:24402
-test_dir2\ererer.js:24402
-test_dir2\text12.txt:22881
