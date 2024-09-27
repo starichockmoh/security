@@ -5,8 +5,8 @@ from letter_map import letter_map
 def save_container(container_path, message):
     binary_data = message.encode('cp1251')
     secret_bits = reduce(lambda acc, bit_item: acc + bin(bit_item)[2:].rjust(8, '0'), binary_data, '')
-    secret_bits = secret_bits + '00000000'
     print(secret_bits)
+    secret_bits = secret_bits + '00000000'
 
     with open(container_path, "r", encoding="utf-8") as f:
         container_content = f.read()
@@ -30,7 +30,7 @@ def save_container(container_path, message):
         f.write(''.join(container_list))
 
 
-message = "Aвг"
+message = "A я"
 
 container_path = "./container.txt"
 

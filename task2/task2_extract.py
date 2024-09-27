@@ -24,7 +24,7 @@ def extract_data(container_with_secret_file):
             secret_bits.append('1')
 
         # Проверка на конец скрытого сообщения
-        if len(secret_bits) >= 8 and ''.join(secret_bits[-8:]) == '00000000':
+        if len(secret_bits) >= 8 and ''.join(secret_bits[-8:]) == '00000000' and len(secret_bits) % 8 == 0:
             # Удаляем маркер окончания
             secret_bits = secret_bits[:-8]
             break
